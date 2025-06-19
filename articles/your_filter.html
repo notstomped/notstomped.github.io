@@ -273,7 +273,7 @@
 
 
                 <div class="flex items-center space-x-2">
-                    <a href="../home.html">
+                    <a href="../index.html">
                         <img src="../assets/icons/leaf-icon.png" alt="Leaf Icon" class="h-8 w-8">
                     </a>
                     <a href="https://duckduckgo.com/?t=ffab&q=green+horizon&ia=web"
@@ -684,7 +684,7 @@
         <button class="popup-close" id="popup-close-btn" aria-label="Close">&times;</button>
         <div class="popup-title">Choices Confirmed</div>
         <div class="popup-desc"><span id="popup-filter-count">You have set 0 filters.</span><br>Continue to homepage.</div>
-        <a href="../home.html" class="popup-reload-btn" id="popup-home-btn">Back to homepage</a>
+        <a href="../index.html" class="popup-reload-btn" id="popup-home-btn">Back to homepage</a>
     </div>
     <div id="reset-popup" class="slideup-popup">
         <button class="popup-close" id="reset-popup-close-btn" aria-label="Close">&times;</button>
@@ -851,7 +851,7 @@
                 var homeBtn = document.createElement('button');
                 homeBtn.textContent = 'Back to Homepage';
                 homeBtn.className = 'popup-reload-btn';
-                homeBtn.onclick = function() { window.location.href = '../home.html'; };
+                homeBtn.onclick = function() { window.location.href = '../index.html'; };
                 btns.appendChild(chooseBtn);
                 btns.appendChild(homeBtn);
                 reloadBtn.parentNode.replaceChild(btns, reloadBtn);
@@ -861,7 +861,7 @@
                 var popup = document.getElementById('reset-popup');
                 if (popup.classList.contains('open')) {
                     if (e.key === 'h' || e.key === 'H') {
-                        window.location.href = '../home.html';
+                        window.location.href = '../index.html';
                     } else if (e.key === 'Escape') {
                         closeResetPopup();
                     }
