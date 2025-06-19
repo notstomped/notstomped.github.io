@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Green Horizon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Add theme colors from home.html */
+        :root {
+            --leaf-50: #f0f9eb;
+            --leaf-100: #d9f0d0;
+            --leaf-200: #c1e7b5;
+            --leaf-300: #a9de9a;
+            --leaf-400: #91d57f;
+            --leaf-500: #79cc64;
+            --leaf-600: #61b349;
+            --leaf-700: #499a2e;
+            --leaf-800: #318113;
+            --leaf-900: #196800;
+        }
+        body { background-color: var(--leaf-50); }
+        .text-leaf-900 { color: var(--leaf-900); }
+        .text-leaf-700 { color: var(--leaf-700); }
+        .text-leaf-200 { color: var(--leaf-200); }
+        .bg-leaf-700 { background-color: var(--leaf-700); }
+        .bg-leaf-800 { background-color: var(--leaf-800); }
+        .bg-leaf-900 { background-color: var(--leaf-900); }
+        .hover\:bg-leaf-100:hover { background-color: var(--leaf-100); }
+        .hover\:text-leaf-200:hover { color: var(--leaf-200); }
+        .border-leaf-700 { border-color: var(--leaf-700); }
+        .rounded-full { border-radius: 9999px; }
+        .font-bold { font-weight: bold; }
+        .transition { transition: all 0.2s; }
+        .step-section { display: none; }
+        .step-section.active { display: block; }
+        .popup-overlay {
+            position: fixed; left: 0; right: 0; top: 0; bottom: 0;
+            background: rgba(0,0,0,0.18); z-index: 49; display: none;
+        }
+        .popup {
+            position: fixed; left: 0; right: 0; top: auto; bottom: -100%;
+            margin: 0 auto; z-index: 50; background: #fff;
+            box-shadow: 0 4px 32px rgba(25, 104, 0, 0.15);
+            border-radius: 2rem; max-width: 28rem; width: 90vw;
+            padding: 2.5rem 1.5rem 1.5rem 1.5rem; text-align: center;
+            display: block; transition: bottom 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+            opacity: 0;
+        }
+        .popup.open { bottom: 50%; transform: translateY(50%); opacity: 1; }
+        .popup.closing { bottom: -100%; opacity: 0; }
+        .popup-title { font-size: 2rem; font-weight: 700; color: #196800; margin-bottom: 0.5rem; }
+        .popup-desc { font-size: 1.1rem; color: #333; margin-bottom: 2.5rem; }
+        .popup-btn { background: #318113; color: #fff; border-radius: 9999px; font-size: 1.1rem; font-weight: 600; padding: 0.75rem 2.5rem; border: none; outline: none; cursor: pointer; transition: background 0.2s; margin: 0 auto; display: block; }
+        .popup-btn:hover, .popup-btn:focus { background: #196800; }
+        .popup-close { position: absolute; top: 1.2rem; right: 1.5rem; font-size: 1.5rem; color: #196800; background: none; border: none; cursor: pointer; font-weight: bold; }
+        @media (max-width: 640px) {
+            .max-w-2xl {
+                max-width: 98vw !important;
+            }
+            .bg-white.rounded-xl.shadow-md.p-8 {
+                padding: 1rem !important;
+            }
+            input, textarea, select {
+                font-size: 1rem !important;
+                min-width: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+        }
+        .gradient-bg {
+            background-image: radial-gradient(circle at center, #1d8f00 0%, #196800 100%);
+        }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 10% 20%, rgba(25, 104, 0, 0.1) 0%, rgba(25, 104, 0, 0.05) 90%);
+        }
+    </style>
+</head>
+<body class="bg-leaf-50 font-sans">
+    <!-- Header (copied from home.html) -->
+    <header class="gradient-bg text-white shadow-lg relative">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <a href="../home.html">
+                        <img src="../assets/icons/leaf-icon.png" alt="Leaf Icon" class="h-8 w-8">
+                    </a>
+                    <a href="https://duckduckgo.com/?t=ffab&q=green+horizon&ia=web"
+                       class="text-2xl md:text-3xl font-bold">Green Horizon</a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="your_filter.html" class="hover:text-leaf-200 transition">Build your filter</a>
+                    <a href="technology.html" class="hover:text-leaf-200 transition">Technology</a>
+                    <a href="energy.html" class="hover:text-leaf-200 transition">Energy</a>
+                    <a href="https://www.farming-simulator.com/buy-now.php?platform=pcdigital"
+                       class="hover:text-leaf-200 transition">Agriculture</a>
+                    <a href="lifestyle.html" class="hover:text-leaf-200 transition">Lifestyle</a>
+                    <a href="about.html" class="hover:text-leaf-200 transition">Medicine</a>
+                </nav>
+                <button id="mobileMenuToggle" class="md:hidden text-xl z-50 relative">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div id="mobileMenu"
+                 class="md:hidden absolute left-0 right-0 top-full bg-leaf-800 text-white z-40 overflow-hidden max-h-0 transition-all duration-300">
+                <div class="flex flex-col px-4 py-4 space-y-2">
+                    <a href="your_filter.html" class="block hover:text-leaf-200">Build your filter</a>
+                    <a href="technology.html" class="block hover:text-leaf-200">Technology</a>
+                    <a href="energy.html" class="block hover:text-leaf-200">Energy</a>
+                    <a href="https://www.farming-simulator.com/buy-now.php?platform=pcdigital"
+                       class="block hover:text-leaf-200">Agriculture</a>
+                    <a href="lifestyle.html" class="block hover:text-leaf-200">Lifestyle</a>
+                    <a href="about.html" class="block hover:text-leaf-200">Medicine</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="container mx-auto px-4 py-16">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-8">
+            <h2 class="text-3xl font-bold text-leaf-900 mb-6 text-center">Contact Us</h2>
+            <form id="contactForm">
+                <!-- Step 1: Email + Reason -->
+                <div id="step1" class="step-section active">
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold">Email</label>
+                        <input type="email" name="email" required class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold">Reason for Contact</label>
+                        <select name="reason" id="reasonSelect" required class="w-full border rounded-lg px-3 py-2">
+                            <option value="">Choose one...</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="question">Question</option>
+                            <option value="bug">Bug Report</option>
+                            <option value="application">Application</option>
+                            <option value="provide_article">Provide Your Article</option>
+                            <option value="add_company">Add Your News-Company</option>
+                        </select>
+                    </div>
+                    <button type="button" id="nextBtn" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full mt-4">Next</button>
+                </div>
+                <!-- Step 2: Feedback/Question -->
+                <div id="step-feedback" class="step-section">
+                    <label class="block mb-2 font-semibold">Your Feedback</label>
+                    <textarea name="feedback" rows="5" class="w-full border rounded-lg px-3 py-2 mb-4" required></textarea>
+                    <div class="mb-4">
+                        <select name="salutation_feedback" class="border rounded-lg px-3 py-2 mb-2">
+                            <option value="">Salutation (optional)</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" name="name_feedback" placeholder="Name (optional)" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <button type="submit" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full">Send</button>
+                </div>
+                <div id="step-question" class="step-section">
+                    <label class="block mb-2 font-semibold">Your Question</label>
+                    <textarea name="question" rows="5" class="w-full border rounded-lg px-3 py-2 mb-4" required></textarea>
+                    <div class="mb-4">
+                        <select name="salutation_question" class="border rounded-lg px-3 py-2 mb-2">
+                            <option value="">Salutation (optional)</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" name="name_question" placeholder="Name (optional)" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <button type="submit" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full">Send</button>
+                </div>
+                <!-- Step 2: Bug -->
+                <div id="step-bug" class="step-section">
+                    <label class="block mb-2 font-semibold">Describe the Bug</label>
+                    <textarea name="bugdesc" rows="4" class="w-full border rounded-lg px-3 py-2 mb-4" required></textarea>
+                    <label class="block mb-2 font-semibold">Steps to Reproduce</label>
+                    <textarea name="steps" rows="3" class="w-full border rounded-lg px-3 py-2 mb-4" required></textarea>
+                    <label class="block mb-2 font-semibold">Upload Screenshot (optional)</label>
+                    <input type="file" name="screenshot" accept="image/*" class="mb-4">
+                    <button type="submit" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full">Send</button>
+                </div>
+                <!-- Step 2: Application (popup only) -->
+                <div id="step-application" class="step-section"></div>
+                <!-- Step 2: Provide Article -->
+                <div id="step-article" class="step-section">
+                    <label class="block mb-2 font-semibold">Choose Article Categories</label>
+                    <div id="accordion-filters-article" class="w-full mb-4">
+                        <!-- Sustainability Categories -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#sustainability-panel-article">
+                                Sustainability
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="sustainability-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Renewable Energy" class="form-checkbox text-leaf-600"> <span>Renewable Energy</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Energy Efficiency" class="form-checkbox text-leaf-600"> <span>Energy Efficiency</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Water Conservation" class="form-checkbox text-leaf-600"> <span>Water Conservation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Waste Management" class="form-checkbox text-leaf-600"> <span>Waste Management</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Pollution Prevention" class="form-checkbox text-leaf-600"> <span>Pollution Prevention</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Agriculture" class="form-checkbox text-leaf-600"> <span>Sustainable Agriculture</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Biodiversity Conservation" class="form-checkbox text-leaf-600"> <span>Biodiversity Conservation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Climate Change Mitigation" class="form-checkbox text-leaf-600"> <span>Climate Change Mitigation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Ecosystem Restoration" class="form-checkbox text-leaf-600"> <span>Ecosystem Restoration</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Circular Economy" class="form-checkbox text-leaf-600"> <span>Circular Economy</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Green Building" class="form-checkbox text-leaf-600"> <span>Green Building</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Transportation" class="form-checkbox text-leaf-600"> <span>Sustainable Transportation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Natural Resource Management" class="form-checkbox text-leaf-600"> <span>Natural Resource Management</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Air Quality" class="form-checkbox text-leaf-600"> <span>Air Quality</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Soil Health" class="form-checkbox text-leaf-600"> <span>Soil Health</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Marine and Coastal Protection" class="form-checkbox text-leaf-600"> <span>Marine and Coastal Protection</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Forest Conservation" class="form-checkbox text-leaf-600"> <span>Forest Conservation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Wildlife Protection" class="form-checkbox text-leaf-600"> <span>Wildlife Protection</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Social Sustainability -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#social-panel-article">
+                                Social Sustainability
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="social-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Community Development" class="form-checkbox text-leaf-600"> <span>Community Development</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Social Equity & Justice" class="form-checkbox text-leaf-600"> <span>Social Equity & Justice</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Human Rights" class="form-checkbox text-leaf-600"> <span>Human Rights</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Fair Labor Practices" class="form-checkbox text-leaf-600"> <span>Fair Labor Practices</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Education & Awareness" class="form-checkbox text-leaf-600"> <span>Education & Awareness</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Public Health & Well-being" class="form-checkbox text-leaf-600"> <span>Public Health & Well-being</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Indigenous Rights" class="form-checkbox text-leaf-600"> <span>Indigenous Rights</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Gender Equality" class="form-checkbox text-leaf-600"> <span>Gender Equality</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Cultural Preservation" class="form-checkbox text-leaf-600"> <span>Cultural Preservation</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Affordable Housing" class="form-checkbox text-leaf-600"> <span>Affordable Housing</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Food Security" class="form-checkbox text-leaf-600"> <span>Food Security</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Access to Clean Water" class="form-checkbox text-leaf-600"> <span>Access to Clean Water</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Disaster Resilience" class="form-checkbox text-leaf-600"> <span>Disaster Resilience</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Safety and Security" class="form-checkbox text-leaf-600"> <span>Safety and Security</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Mental Health Support" class="form-checkbox text-leaf-600"> <span>Mental Health Support</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Economic Sustainability -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#economic-panel-article">
+                                Economic Sustainability
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="economic-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Green Economy" class="form-checkbox text-leaf-600"> <span>Green Economy</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Ethical Investment" class="form-checkbox text-leaf-600"> <span>Ethical Investment</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Supply Chains" class="form-checkbox text-leaf-600"> <span>Sustainable Supply Chains</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Corporate Social Responsibility (CSR)" class="form-checkbox text-leaf-600"> <span>Corporate Social Responsibility (CSR)</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Local Economic Development" class="form-checkbox text-leaf-600"> <span>Local Economic Development</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Fair Trade" class="form-checkbox text-leaf-600"> <span>Fair Trade</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Tourism" class="form-checkbox text-leaf-600"> <span>Sustainable Tourism</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Innovation & Green Technology" class="form-checkbox text-leaf-600"> <span>Innovation & Green Technology</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Circular Business Models" class="form-checkbox text-leaf-600"> <span>Circular Business Models</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Economic Resilience" class="form-checkbox text-leaf-600"> <span>Economic Resilience</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Responsible Consumption" class="form-checkbox text-leaf-600"> <span>Responsible Consumption</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Job Creation in Green Sectors" class="form-checkbox text-leaf-600"> <span>Job Creation in Green Sectors</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Finance" class="form-checkbox text-leaf-600"> <span>Sustainable Finance</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Governance & Policy -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#governance-panel-article">
+                                Governance & Policy
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="governance-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Environmental Regulations" class="form-checkbox text-leaf-600"> <span>Environmental Regulations</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="International Sustainability Agreements" class="form-checkbox text-leaf-600"> <span>International Sustainability Agreements</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Transparency & Accountability" class="form-checkbox text-leaf-600"> <span>Transparency & Accountability</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Urban Planning" class="form-checkbox text-leaf-600"> <span>Sustainable Urban Planning</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Environmental Justice Policy" class="form-checkbox text-leaf-600"> <span>Environmental Justice Policy</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Public Participation & Engagement" class="form-checkbox text-leaf-600"> <span>Public Participation & Engagement</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainability Metrics & Reporting" class="form-checkbox text-leaf-600"> <span>Sustainability Metrics & Reporting</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="ESG (Environmental, Social, Governance) Standards" class="form-checkbox text-leaf-600"> <span>ESG (Environmental, Social, Governance) Standards</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Institutional Sustainability Practices" class="form-checkbox text-leaf-600"> <span>Institutional Sustainability Practices</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Green Procurement Policies" class="form-checkbox text-leaf-600"> <span>Green Procurement Policies</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Science & Innovation -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#science-panel-article">
+                                Science & Innovation
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="science-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Climate Science" class="form-checkbox text-leaf-600"> <span>Climate Science</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Environmental Monitoring" class="form-checkbox text-leaf-600"> <span>Environmental Monitoring</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Green Tech Development" class="form-checkbox text-leaf-600"> <span>Green Tech Development</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Materials Research" class="form-checkbox text-leaf-600"> <span>Sustainable Materials Research</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Life Cycle Analysis" class="form-checkbox text-leaf-600"> <span>Life Cycle Analysis</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Carbon Capture and Storage" class="form-checkbox text-leaf-600"> <span>Carbon Capture and Storage</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Smart Cities & IoT for Sustainability" class="form-checkbox text-leaf-600"> <span>Smart Cities & IoT for Sustainability</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Artificial Intelligence in Sustainability" class="form-checkbox text-leaf-600"> <span>Artificial Intelligence in Sustainability</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Biotechnology for Environmental Solutions" class="form-checkbox text-leaf-600"> <span>Biotechnology for Environmental Solutions</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Lifestyle -->
+                        <div class="border-b">
+                            <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#lifestyle-panel-article">
+                                Lifestyle
+                                <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="lifestyle-panel-article" class="accordion-panel hidden">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Low-Impact Living" class="form-checkbox text-leaf-600"> <span>Low-Impact Living</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Zero Waste Lifestyle" class="form-checkbox text-leaf-600"> <span>Zero Waste Lifestyle</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Fashion" class="form-checkbox text-leaf-600"> <span>Sustainable Fashion</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Eco-Friendly Products" class="form-checkbox text-leaf-600"> <span>Eco-Friendly Products</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Green Office Practices" class="form-checkbox text-leaf-600"> <span>Green Office Practices</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Minimalism" class="form-checkbox text-leaf-600"> <span>Minimalism</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Home Energy Efficiency" class="form-checkbox text-leaf-600"> <span>Home Energy Efficiency</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Sustainable Diets (e.g. plant-based, local food)" class="form-checkbox text-leaf-600"> <span>Sustainable Diets (e.g. plant-based, local food)</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="DIY Sustainability Projects" class="form-checkbox text-leaf-600"> <span>DIY Sustainability Projects</span></label>
+                                    <label class="flex items-center space-x-2 filter-hover"><input type="checkbox" name="articlecats" value="Transportation Alternatives (bike, EVs, etc.)" class="form-checkbox text-leaf-600"> <span>Transportation Alternatives (bike, EVs, etc.)</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="block mb-2 font-semibold">Title</label>
+                    <input type="text" name="articletitle" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                    <label class="block mb-2 font-semibold">Author</label>
+                    <div class="mb-4">
+                        <select name="salutation_article" class="border rounded-lg px-3 py-2 mb-2">
+                            <option value="">Salutation</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" name="articleauthor" placeholder="Author Name" class="w-full border rounded-lg px-3 py-2" required>
+                    </div>
+                    <label class="block mb-2 font-semibold">Sources</label>
+                    <input type="file" name="articlesourcesfile" accept=".pdf,.md" class="mb-2">
+                    <input type="url" name="articlesourcesurl" placeholder="Or paste a source link (https://...)" class="w-full border rounded-lg px-3 py-2 mb-4">
+                    <label class="block mb-2 font-semibold">Upload Article File</label>
+                    <input type="file" name="articlefile" accept=".pdf,.docx,.odt" class="mb-4">
+                    <button type="submit" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full">Send</button>
+                </div>
+                <!-- Step 2: Add Company -->
+                <div id="step-company" class="step-section">
+                    <div class="mb-4">
+                        <select name="salutation_company" class="border rounded-lg px-3 py-2 mb-2">
+                            <option value="">Salutation</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" name="name_company" placeholder="Name" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <label class="block mb-2 font-semibold">Company Name</label>
+                    <input type="text" name="companyname" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                    <label class="block mb-2 font-semibold">Number of Employees</label>
+                    <input type="number" name="companysize" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                    <label class="block mb-2 font-semibold">Type of Newspaper</label>
+                    <select name="companytype" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                        <option value="">Choose type...</option>
+                        <option value="digital">Digital</option>
+                        <option value="analogue">Analogue</option>
+                        <option value="both">Both</option>
+                    </select>
+                    <label class="block mb-2 font-semibold">Short Description</label>
+                    <textarea name="companydesc" rows="3" class="w-full border rounded-lg px-3 py-2 mb-4" required></textarea>
+                    <label class="block mb-2 font-semibold">Main Goal</label>
+                    <input type="text" name="companygoal" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                    <label class="block mb-2 font-semibold">Category Focus</label>
+                    <input type="text" name="companyfocus" class="w-full border rounded-lg px-3 py-2 mb-4" required>
+                    <button type="submit" class="bg-leaf-700 hover:bg-leaf-800 text-white font-bold py-2 px-6 rounded-full transition w-full">Send</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <div id="popup-overlay" class="popup-overlay"></div>
+    <div id="popup-application" class="popup">
+        <button class="popup-close" id="popup-close-btn" aria-label="Close">&times;</button>
+        <div class="popup-title">Applications Closed</div>
+        <div class="popup-desc">Sorry, applications are currently closed.</div>
+        <button class="popup-btn" id="popup-ok-btn">OK</button>
+    </div>
+    <!-- Footer (copied from home.html) -->
+    <footer class="bg-leaf-900 text-leaf-200 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="../assets/icons/leaf-icon.png" alt="Leaf Icon" class="h-8 w-8">
+                        <h3 class="text-xl font-bold text-white">Green Horizon</h3>
+                    </div>
+                    <p class="mb-4">Sharing positive environmental news to inspire action and hope.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/tuhamburg/" class="text-leaf-300 hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Sections</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">Technology</a></li>
+                        <li><a href="#" class="hover:text-white transition">Energy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Agriculture</a></li>
+                        <li><a href="#" class="hover:text-white transition">Conservation</a></li>
+                        <li><a href="#" class="hover:text-white transition">Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">Get Involved</a></li>
+                        <li><a href="#" class="hover:text-white transition">Sustainable Living</a></li>
+                        <li><a href="#" class="hover:text-white transition">Green Investments</a></li>
+                        <li><a href="https://www.google.com" class="hover:text-white transition">Research Papers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="hover:text-leaf-200 transition">About</a></li>
+                        <li><a href="team.html" class="hover:text-leaf-200 transition">Our Team</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="../stuff/privacy.html" class="hover:text-leaf-200 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-leaf-800 mt-12 pt-8 text-center">
+                <p>© Imagine some copyright stuff here</p>
+                <p>This is mostly AI-generated by DeepSite, ChatGPT and Copilot.</p>
+                <a href="https://enzostvs-deepsite.hf.space/" class="hover:text-white transition">DeepSite generation</a>
+                <p class="text-leaf-400 text-sm">(Click the link above to learn more about DeepSite)</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Categories for article submission (same as your_filter.html)
+        const categories = [
+            "Renewable Energy", "Energy Efficiency", "Water Conservation", "Waste Management", "Pollution Prevention", "Sustainable Agriculture", "Biodiversity Conservation", "Climate Change Mitigation", "Ecosystem Restoration", "Circular Economy", "Green Building", "Sustainable Transportation", "Natural Resource Management", "Air Quality", "Soil Health", "Marine and Coastal Protection", "Forest Conservation", "Wildlife Protection",
+            // Social
+            "Community Development", "Social Equity & Justice", "Human Rights", "Fair Labor Practices", "Education & Awareness", "Public Health & Well-being", "Indigenous Rights", "Gender Equality", "Cultural Preservation", "Affordable Housing", "Food Security", "Access to Clean Water", "Disaster Resilience", "Safety and Security", "Mental Health Support",
+            // Economic
+            "Green Economy", "Ethical Investment", "Sustainable Supply Chains", "Corporate Social Responsibility (CSR)", "Local Economic Development", "Fair Trade", "Sustainable Tourism", "Innovation & Green Technology", "Circular Business Models", "Economic Resilience", "Responsible Consumption", "Job Creation in Green Sectors", "Sustainable Finance",
+            // Governance & Policy
+            "Environmental Regulations", "International Sustainability Agreements", "Transparency & Accountability", "Sustainable Urban Planning", "Environmental Justice Policy", "Public Participation & Engagement", "Sustainability Metrics & Reporting", "ESG (Environmental, Social, Governance) Standards", "Institutional Sustainability Practices", "Green Procurement Policies",
+            // Science & Innovation
+            "Climate Science", "Environmental Monitoring", "Green Tech Development", "Sustainable Materials Research", "Life Cycle Analysis", "Carbon Capture and Storage", "Smart Cities & IoT for Sustainability", "Artificial Intelligence in Sustainability", "Biotechnology for Environmental Solutions",
+            // Lifestyle
+            "Low-Impact Living", "Zero Waste Lifestyle", "Sustainable Fashion", "Eco-Friendly Products", "Green Office Practices", "Minimalism", "Home Energy Efficiency", "Sustainable Diets (e.g. plant-based, local food)", "DIY Sustainability Projects", "Transportation Alternatives (bike, EVs, etc.)"
+        ];
+        // Populate article categories
+        const catDiv = document.getElementById('articleCategories');
+        if (catDiv) {
+            categories.forEach(cat => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center space-x-2 filter-hover';
+                label.innerHTML = `<input type="checkbox" name="articlecats" value="${cat}" class="form-checkbox text-leaf-600"> <span>${cat}</span>`;
+                catDiv.appendChild(label);
+            });
+        }
+        // Step navigation
+        const form = document.getElementById('contactForm');
+        const step1 = document.getElementById('step1');
+        const steps = {
+            feedback: document.getElementById('step-feedback'),
+            question: document.getElementById('step-question'),
+            bug: document.getElementById('step-bug'),
+            application: document.getElementById('step-application'),
+            provide_article: document.getElementById('step-article'),
+            add_company: document.getElementById('step-company')
+        };
+        function showStep(stepKey) {
+            step1.classList.remove('active');
+            Object.values(steps).forEach(s => s.classList.remove('active'));
+            if (steps[stepKey]) steps[stepKey].classList.add('active');
+        }
+        document.getElementById('nextBtn').onclick = function() {
+            const reason = document.getElementById('reasonSelect').value;
+            if (!reason) return;
+            if (reason === 'application') {
+                document.getElementById('popup-overlay').style.display = 'block';
+                const popup = document.getElementById('popup-application');
+                popup.classList.remove('closing');
+                popup.classList.add('open');
+            } else {
+                showStep(reason);
+            }
+        };
+        if (document.getElementById('popup-close-btn')) {
+            document.getElementById('popup-close-btn').onclick = closePopup;
+            document.getElementById('popup-ok-btn').onclick = closePopup;
+            document.getElementById('popup-overlay').onclick = function(e) {
+                if (document.getElementById('popup-application').classList.contains('open')) {
+                    closePopup();
+                }
+            };
+        }
+        function closePopup() {
+            const popup = document.getElementById('popup-application');
+            popup.classList.remove('open');
+            popup.classList.add('closing');
+            setTimeout(function() {
+                popup.classList.remove('closing');
+                document.getElementById('popup-overlay').style.display = 'none';
+            }, 500);
+        }
+        const toggleButton = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (toggleButton && mobileMenu) {
+            toggleButton.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('max-h-0')) {
+                    mobileMenu.classList.remove('max-h-0');
+                    mobileMenu.classList.add('max-h-96');
+                } else {
+                    mobileMenu.classList.remove('max-h-96');
+                    mobileMenu.classList.add('max-h-0');
+                }
+            });
+            document.querySelectorAll('#mobileMenu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('max-h-96');
+                    mobileMenu.classList.add('max-h-0');
+                });
+            });
+        }
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            alert('Form submitted! (Demo only)');
+        };
+    </script>
+</body>
+</html>

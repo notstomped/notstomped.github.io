@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Horizon | Positive Sustainability News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'leaf': {
+                            50: '#f0f9eb',
+                            100: '#d9f0d0',
+                            200: '#c1e7b5',
+                            300: '#a9de9a',
+                            400: '#91d57f',
+                            500: '#79cc64',
+                            600: '#61b349',
+                            700: '#499a2e',
+                            800: '#318113',
+                            900: '#196800',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(25, 104, 0, 0.15);
+        }
+
+        
+        .gradient-bg {
+            background-image: radial-gradient(circle at center, #1d8f00 0%, #196800 100%);
+        }
+
+        .hero-pattern {
+            background-image: radial-gradient(circle at 10% 20%, rgba(25, 104, 0, 0.1) 0%, rgba(25, 104, 0, 0.05) 90%);
+        }
+        .accordion-category {
+            /* background-color: #318113;  brighter green */
+            border-radius: 9999px; /* fully rounded for oval */
+            color: #196800;
+            transition: background 0.2s;
+            background: none;
+        }
+        .accordion-category:hover, .accordion-category:focus {
+            /* background-color: #196800; */
+            background: none;
+            color: #318113;
+        }
+        /* Add hover effect to filter labels */
+        .accordion-panel label.filter-hover {
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+            border-radius: 0.5rem;
+        }
+        .accordion-panel label.filter-hover:hover {
+            background: #e6f4e6;
+            color: #196800;
+        }
+        .confirm-btn {
+            background-color: #318113;
+            color: #fff;
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: inline-block;
+        }
+        .confirm-btn:hover, .confirm-btn:focus {
+            background-color: #196800;
+        }
+        .slideup-popup-overlay {
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            background: rgba(0,0,0,0.18);
+            z-index: 49;
+            display: none;
+        }
+        .slideup-popup {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: auto;
+            bottom: -100%;
+            margin: 0 auto;
+            z-index: 50;
+            background: #fff;
+            box-shadow: 0 4px 32px rgba(25, 104, 0, 0.15);
+            border-radius: 2rem;
+            max-width: 28rem;
+            width: 90vw;
+            padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+            text-align: center;
+            display: block;
+            transition: bottom 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+            opacity: 0;
+        }
+        .slideup-popup.open {
+            bottom: 50%;
+            transform: translateY(50%);
+            opacity: 1;
+        }
+        .slideup-popup.closing {
+            bottom: -100%;
+            opacity: 0;
+            transition: bottom 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+        }
+        .popup-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #196800;
+            margin-bottom: 0.5rem;
+        }
+        .popup-desc {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 2.5rem;
+        }
+        .popup-reload-btn {
+            background: #318113;
+            color: #fff;
+            border-radius: 9999px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 2.5rem;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 0 auto;
+            display: block;
+        }
+        .popup-reload-btn:hover, .popup-reload-btn:focus {
+            background: #196800;
+        }
+        .popup-close {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: #196800;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .filter-overview-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 320px;
+            max-width: 90vw;
+            background: #fff;
+            box-shadow: 4px 0 32px rgba(25, 104, 0, 0.15);
+            border-top-right-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            z-index: 60;
+            transform: translateX(-100%);
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+            opacity: 0.98;
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-overview-drawer.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .filter-overview-overlay {
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            background: rgba(0,0,0,0.18);
+            z-index: 59;
+            display: none;
+        }
+        .filter-overview-overlay.open {
+            display: block;
+        }
+        .filter-overview-handle {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            background: #318113;
+            color: #fff;
+            border-radius: 0 1rem 1rem 0;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 61;
+            box-shadow: 2px 0 8px rgba(25,104,0,0.08);
+        }
+        .filter-overview-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #196800;
+            margin: 2rem 0 1rem 2rem;
+        }
+        .filter-overview-list {
+            margin-left: 2rem;
+            margin-bottom: 2rem;
+            color: #196800;
+            font-size: 1.1rem;
+            list-style: disc outside;
+            padding-left: 1.5em;
+        }
+        .filter-overview-list li {
+            padding-left: 0.5em;
+            text-indent: 0;
+            white-space: normal;
+            word-break: break-word;
+        }
+        /* Make filter overview drawer buttons always visible and accessible on mobile */
+        @media (max-width: 768px) {
+            .filter-overview-drawer {
+                width: 90vw;
+                min-width: 0;
+                max-width: 100vw;
+                border-radius: 0 2rem 2rem 0;
+            }
+            #filter-overview-clear {
+                position: sticky;
+                bottom: 0;
+                width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 1.5rem;
+                z-index: 100;
+                display: block;
+            }
+        }
+        /* Always keep the button at the bottom of the drawer */
+        #filter-overview-clear {
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-leaf-50 font-sans">
+    <div id="filter-overview-overlay" class="filter-overview-overlay"></div>
+    <div id="filter-overview-drawer" class="filter-overview-drawer">
+        <div class="filter-overview-title">Active Filters</div>
+        <ul id="filter-overview-list" class="filter-overview-list"></ul>
+        <button id="filter-overview-clear" class="border border-leaf-700 text-leaf-700 rounded-full px-6 py-2 font-semibold hover:bg-leaf-100 transition m-4" style="margin-top:auto;">Clear All Filters</button>
+        <div class="filter-overview-handle" id="filter-overview-handle">&#9776;</div>
+    </div>
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <!-- Mobile Menu (sliding) -->
+                <div id="mobileMenu"
+                    class="md:hidden absolute left-0 right-0 top-[100%] bg-leaf-800 text-white z-50 hidden transition-all duration-300 overflow-hidden max-h-0">
+                    <div class="flex flex-col px-4 py-4 space-y-2">
+                        <a href="." class="block hover:text-leaf-200">Build your filter</a>
+                        <a href="technology.html" class="block hover:text-leaf-200">Technology</a>
+                        <a href="energy.html" class="block hover:text-leaf-200">Energy</a>
+                        <a href="https://www.farming-simulator.com/buy-now.php?platform=pcdigital"
+                            class="block hover:text-leaf-200">Agriculture</a>
+                        <a href="lifestyle.html" class="block hover:text-leaf-200">Lifestyle</a>
+                        <a href="about.html" class="block hover:text-leaf-200">Medicine</a>
+                        <button id="mobileFilterOverviewBtn" class="block text-left w-full mt-2 py-2 px-2 rounded hover:bg-leaf-700 hover:text-white transition">Filter Overview</button>
+                    </div>
+                </div>
+
+
+                <div class="flex items-center space-x-2">
+                    <a href="../home.html">
+                        <img src="../assets/icons/leaf-icon.png" alt="Leaf Icon" class="h-8 w-8">
+                    </a>
+                    <a href="https://duckduckgo.com/?t=ffab&q=green+horizon&ia=web"
+                        class="text-2xl md:text-3xl font-bold">Green Horizon</a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="hover:text-leaf-200 transition">Build your filter</a>
+                    <a href="technology.html" class="hover:text-leaf-200 transition">Technology</a>
+                    <a href="energy.html" class="hover:text-leaf-200 transition">Energy</a>
+                    <a href="https://www.farming-simulator.com/buy-now.php?platform=pcdigital"
+                        class="hover:text-leaf-200 transition">Agriculture</a>
+                    <a href="lifestyle.html" class="hover:text-leaf-200 transition">Lifestyle</a>
+                    <a href="about.html" class="hover:text-leaf-200 transition">Medicine</a>
+                </nav>
+                <button id="mobileMenuToggle" class="md:hidden text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+            </div>
+    </header>
+
+    <!-- Filter Section -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-leaf-900 mb-6 text-center">Choose Your Filters</h2>
+            <p class="text-center text-leaf-700 mb-4">Select your sustainability categories.</p>
+            <!-- Accordion for filter categories -->
+            <div id="accordion-filters" class="w-full">
+                <!-- Sustainability Categories -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#sustainability-panel">
+                        Sustainability
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="sustainability-panel" class="accordion-panel">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <!-- Sustainability Categories -->
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Renewable Energy</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Energy Efficiency</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Water Conservation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Waste Management</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Pollution Prevention</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Agriculture</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Biodiversity Conservation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Climate Change Mitigation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Ecosystem Restoration</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Circular Economy</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Green Building</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Transportation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Natural Resource Management</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Air Quality</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Soil Health</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Marine and Coastal Protection</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Forest Conservation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Wildlife Protection</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Social Sustainability -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#social-panel">
+                        Social Sustainability
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="social-panel" class="accordion-panel hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Community Development</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Social Equity & Justice</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Human Rights</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Fair Labor Practices</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Education & Awareness</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Public Health & Well-being</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Indigenous Rights</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Gender Equality</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Cultural Preservation</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Affordable Housing</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Food Security</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Access to Clean Water</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Disaster Resilience</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Safety and Security</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Mental Health Support</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Economic Sustainability -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#economic-panel">
+                        Economic Sustainability
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="economic-panel" class="accordion-panel hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Green Economy</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Ethical Investment</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Supply Chains</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Corporate Social Responsibility (CSR)</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Local Economic Development</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Fair Trade</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Tourism</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Innovation & Green Technology</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Circular Business Models</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Economic Resilience</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Responsible Consumption</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Job Creation in Green Sectors</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Finance</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Governance & Policy -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#governance-panel">
+                        Governance & Policy
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="governance-panel" class="accordion-panel hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Environmental Regulations</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>International Sustainability Agreements</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Transparency & Accountability</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Urban Planning</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Environmental Justice Policy</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Public Participation & Engagement</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainability Metrics & Reporting</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>ESG (Environmental, Social, Governance) Standards</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Institutional Sustainability Practices</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Green Procurement Policies</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Science & Innovation -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#science-panel">
+                        Science & Innovation
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="science-panel" class="accordion-panel hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Climate Science</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Environmental Monitoring</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Green Tech Development</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Materials Research</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Life Cycle Analysis</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Carbon Capture and Storage</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Smart Cities & IoT for Sustainability</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Artificial Intelligence in Sustainability</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Biotechnology for Environmental Solutions</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Operational & Lifestyle Sustainability -->
+                <div class="border-b">
+                    <button type="button" class="accordion-category w-full flex justify-between items-center py-4 px-6 text-left text-lg font-semibold focus:outline-none accordion-toggle mb-2" data-target="#lifestyle-panel">
+                        Operational & Lifestyle Sustainability
+                        <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="lifestyle-panel" class="accordion-panel hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Low-Impact Living</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Zero Waste Lifestyle</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Fashion</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Eco-Friendly Products</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Green Office Practices</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Minimalism</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Home Energy Efficiency</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Sustainable Diets (e.g. plant-based, local food)</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>DIY Sustainability Projects</span>
+                            </label>
+                            <label class="flex items-center space-x-2 filter-hover">
+                                <input type="checkbox" class="form-checkbox text-leaf-600 filter-checkbox">
+                                <span>Transportation Alternatives (bike, EVs, etc.)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-8 flex flex-col items-center gap-4">
+                <a href="#" id="save-choice-button" class="confirm-btn mb-2">
+                    Confirm choices
+                </a>
+                <button id="reset-filters-button" class="border border-leaf-700 text-leaf-700 rounded-full px-6 py-2 font-semibold hover:bg-leaf-100 transition">Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="slideup-popup-overlay" class="slideup-popup-overlay"></div>
+    <div id="slideup-popup" class="slideup-popup">
+        <button class="popup-close" id="popup-close-btn" aria-label="Close">&times;</button>
+        <div class="popup-title">Choices Confirmed</div>
+        <div class="popup-desc"><span id="popup-filter-count">You have set 0 filters.</span><br>Continue to homepage.</div>
+        <a href="../home.html" class="popup-reload-btn" id="popup-home-btn">Back to homepage</a>
+    </div>
+    <div id="reset-popup" class="slideup-popup">
+        <button class="popup-close" id="reset-popup-close-btn" aria-label="Close">&times;</button>
+        <div class="popup-title">Filters Reset</div>
+        <div class="popup-desc">All filters have been cleared.</div>
+        <button class="popup-reload-btn" id="reset-popup-reload-btn">Reload page</button>
+    </div>
+
+    <script>
+        // Accordion logic with animation and all closed by default
+        document.addEventListener('DOMContentLoaded', function() {
+            // Restore filters from localStorage
+            var savedFilters = JSON.parse(localStorage.getItem('chosenFilters') || '[]');
+            if (savedFilters.length > 0) {
+                document.querySelectorAll('.filter-checkbox').forEach(function(cb) {
+                    var label = cb.parentElement.querySelector('span');
+                    if(label && savedFilters.includes(label.textContent.trim())) {
+                        cb.checked = true;
+                    }
+                });
+            }
+            // Ensure all panels are hidden on load
+            document.querySelectorAll('.accordion-panel').forEach(function(panel) {
+                panel.classList.add('hidden');
+                panel.style.maxHeight = '0px';
+                panel.style.overflow = 'hidden';
+                panel.style.transition = 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            document.querySelectorAll('.accordion-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const target = document.querySelector(btn.getAttribute('data-target'));
+                    // Close all panels with animation
+                    document.querySelectorAll('.accordion-panel').forEach(function(panel) {
+                        if(panel !== target) {
+                            panel.style.maxHeight = '0px';
+                            setTimeout(() => panel.classList.add('hidden'), 400);
+                        }
+                    });
+                    // Toggle current
+                    if (target.classList.contains('hidden')) {
+                        target.classList.remove('hidden');
+                        // Wait for display to be block before animating
+                        setTimeout(() => {
+                            target.style.maxHeight = target.scrollHeight + 'px';
+                        }, 10);
+                    } else {
+                        target.style.maxHeight = '0px';
+                        setTimeout(() => target.classList.add('hidden'), 400);
+                    }
+                });
+            });
+        });
+        // Save button logic
+        document.getElementById('save-choice-button').addEventListener('click', function (event) {
+            event.preventDefault();
+            var checked = document.querySelectorAll('.filter-checkbox:checked');
+            var filters = [];
+            checked.forEach(function(cb) {
+                var label = cb.parentElement.querySelector('span');
+                if(label) filters.push(label.textContent.trim());
+            });
+            localStorage.setItem('chosenFilters', JSON.stringify(filters));
+            var count = filters.length;
+            document.getElementById('popup-filter-count').textContent = 'You have set ' + count + ' filter' + (count === 1 ? '' : 's') + '.';
+            var popup = document.getElementById('slideup-popup');
+            var overlay = document.getElementById('slideup-popup-overlay');
+            overlay.style.display = 'block';
+            popup.classList.remove('closing');
+            popup.classList.add('open');
+        });
+        // Reset button logic
+        document.getElementById('reset-filters-button').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.querySelectorAll('.filter-checkbox').forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+            localStorage.removeItem('chosenFilters');
+            var popup = document.getElementById('reset-popup');
+            var overlay = document.getElementById('slideup-popup-overlay');
+            overlay.style.display = 'block';
+            popup.classList.remove('closing');
+            popup.classList.add('open');
+        });
+        // Popup close logic for both confirm and reset popups
+        function closePopup() {
+            var popup = document.getElementById('slideup-popup');
+            var overlay = document.getElementById('slideup-popup-overlay');
+            popup.classList.remove('open');
+            popup.classList.add('closing');
+            setTimeout(function() {
+                popup.classList.remove('closing');
+                overlay.style.display = 'none';
+            }, 500);
+        }
+        function closeResetPopup() {
+            var popup = document.getElementById('reset-popup');
+            var overlay = document.getElementById('slideup-popup-overlay');
+            popup.classList.remove('open');
+            popup.classList.add('closing');
+            setTimeout(function() {
+                popup.classList.remove('closing');
+                overlay.style.display = 'none';
+            }, 500);
+        }
+        // Add event listeners for close buttons and overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('popup-close-btn').onclick = closePopup;
+            document.getElementById('reset-popup-close-btn').onclick = closeResetPopup;
+            document.getElementById('slideup-popup-overlay').onclick = function(e) {
+                // Only close if clicking directly on the overlay, not on the popup
+                if (document.getElementById('slideup-popup').classList.contains('open')) closePopup();
+                if (document.getElementById('reset-popup').classList.contains('open')) closeResetPopup();
+            };
+        });
+        // Fix mobile menu toggle (menu not opening)
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (toggleButton && mobileMenu) {
+                toggleButton.addEventListener('click', function() {
+                    if (mobileMenu.classList.contains('max-h-0')) {
+                        mobileMenu.classList.remove('max-h-0');
+                        mobileMenu.classList.add('max-h-96');
+                        mobileMenu.classList.remove('hidden');
+                    } else {
+                        mobileMenu.classList.remove('max-h-96');
+                        mobileMenu.classList.add('max-h-0');
+                        setTimeout(function() { mobileMenu.classList.add('hidden'); }, 300);
+                    }
+                });
+                document.querySelectorAll('#mobileMenu a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('max-h-96');
+                        mobileMenu.classList.add('max-h-0');
+                        setTimeout(function() { mobileMenu.classList.add('hidden'); }, 300);
+                    });
+                });
+            }
+        });
+        // Reset popup logic: replace reload with two buttons and new keyboard shortcuts
+        function closeResetPopup() {
+            var popup = document.getElementById('reset-popup');
+            var overlay = document.getElementById('slideup-popup-overlay');
+            popup.classList.remove('open');
+            popup.classList.add('closing');
+            setTimeout(function() {
+                popup.classList.remove('closing');
+                overlay.style.display = 'none';
+            }, 500);
+        }
+        // Replace reload button with two new buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            var resetPopup = document.getElementById('reset-popup');
+            var reloadBtn = document.getElementById('reset-popup-reload-btn');
+            if (reloadBtn) {
+                var btns = document.createElement('div');
+                btns.style.display = 'flex';
+                btns.style.justifyContent = 'center';
+                btns.style.gap = '1rem';
+                var chooseBtn = document.createElement('button');
+                chooseBtn.textContent = 'Choose New Filters';
+                chooseBtn.className = 'popup-reload-btn';
+                chooseBtn.onclick = closeResetPopup;
+                var homeBtn = document.createElement('button');
+                homeBtn.textContent = 'Back to Homepage';
+                homeBtn.className = 'popup-reload-btn';
+                homeBtn.onclick = function() { window.location.href = '../home.html'; };
+                btns.appendChild(chooseBtn);
+                btns.appendChild(homeBtn);
+                reloadBtn.parentNode.replaceChild(btns, reloadBtn);
+            }
+            // Keyboard shortcuts for popup
+            document.addEventListener('keydown', function(e) {
+                var popup = document.getElementById('reset-popup');
+                if (popup.classList.contains('open')) {
+                    if (e.key === 'h' || e.key === 'H') {
+                        window.location.href = '../home.html';
+                    } else if (e.key === 'Escape') {
+                        closeResetPopup();
+                    }
+                }
+            });
+            document.getElementById('reset-popup-close-btn').onclick = closeResetPopup;
+        });
+        // Mobile menu toggle with slide animation
+        const toggleButton = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        toggleButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('max-h-0')) {
+                mobileMenu.classList.remove('max-h-0');
+                mobileMenu.classList.add('max-h-96');
+            } else {
+                mobileMenu.classList.remove('max-h-96');
+                mobileMenu.classList.add('max-h-0');
+            }
+        });
+        // Optional: Close menu when a link is clicked
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('max-h-96');
+                mobileMenu.classList.add('max-h-0');
+            });
+        });
+        // Filter Overview Drawer logic
+        function updateFilterOverview() {
+            var filters = JSON.parse(localStorage.getItem('chosenFilters') || '[]');
+            var list = document.getElementById('filter-overview-list');
+            list.innerHTML = '';
+            if (filters.length === 0) {
+                var li = document.createElement('li');
+                li.textContent = 'No active filters.';
+                list.appendChild(li);
+            } else {
+                filters.forEach(function(f) {
+                    var li = document.createElement('li');
+                    li.textContent = f;
+                    // Bullet points are now visible due to list-style
+                    list.appendChild(li);
+                });
+            }
+        }
+        function openFilterOverview() {
+            document.getElementById('filter-overview-drawer').classList.add('open');
+            document.getElementById('filter-overview-overlay').classList.add('open');
+            updateFilterOverview();
+        }
+        function closeFilterOverview() {
+            document.getElementById('filter-overview-drawer').classList.remove('open');
+            document.getElementById('filter-overview-overlay').classList.remove('open');
+        }
+        document.getElementById('filter-overview-handle').addEventListener('click', function(e) {
+            var drawer = document.getElementById('filter-overview-drawer');
+            if (drawer.classList.contains('open')) {
+                closeFilterOverview();
+            } else {
+                openFilterOverview();
+            }
+        });
+        document.getElementById('filter-overview-overlay').addEventListener('click', closeFilterOverview);
+        document.getElementById('filter-overview-clear').addEventListener('click', function() {
+            localStorage.removeItem('chosenFilters');
+            updateFilterOverview();
+            document.dispatchEvent(new Event('filtersChanged'));
+        });
+        // Allow closing the filter overview drawer with Escape
+        document.addEventListener('keydown', function(e) {
+            var drawer = document.getElementById('filter-overview-drawer');
+            if (drawer.classList.contains('open') && e.key === 'Escape') {
+                closeFilterOverview();
+            }
+        });
+        // Update overview on filter changes
+        document.addEventListener('DOMContentLoaded', updateFilterOverview);
+        document.addEventListener('filtersChanged', updateFilterOverview);
+    </script>
+</body>
+
+
+<!-- Footer -->
+<footer class="bg-leaf-900 text-leaf-200 py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="fas fa-leaf text-2xl text-leaf-400"></i>
+                    <h3 class="text-xl font-bold text-white">Green Horizon</h3>
+                </div>
+                <p class="mb-4">Sharing positive environmental news to inspire action and hope.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-leaf-300 hover:text-white"><i class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="text-leaf-300 hover:text-white"><i class="fab fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-leaf-300 hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="#" class="text-leaf-300 hover:text-white"><i class="fab fa-linkedin text-xl"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Sections</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Technology</a></li>
+                    <li><a href="#" class="hover:text-white transition">Energy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Agriculture</a></li>
+                    <li><a href="#" class="hover:text-white transition">Conservation</a></li>
+                    <li><a href="#" class="hover:text-white transition">Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Resources</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Get Involved</a></li>
+                    <li><a href="#" class="hover:text-white transition">Sustainable Living</a></li>
+                    <li><a href="#" class="hover:text-white transition">Green Investments</a></li>
+                    <li><a href="https://www.google.com" class="hover:text-white transition">Research Papers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Company</h4>
+                <ul class="space-y-2">
+                    <li><a href="articles/about.html" class="hover:text-leaf-200 transition">About</a><li>
+                    <li><a href="articles/team.html" class="hover:text-leaf-200 transition">Our Team</a><li>
+                    <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                    <li><a href="stuff/privacy.html" class="hover:text-leaf-200 transition">Privacy Policy</a><li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-leaf-800 mt-12 pt-8 text-center">
+            <p>© 2023 Green Horizon. All rights reserved.</p>
+            <p>well this is totally not AI-generated :)</p>
+        </div>
+    </div>
+</footer>
+
+</html>
