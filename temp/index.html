@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Check Input</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <button class="music-toggle" id="musicToggle">🎵</button>
+    <div class="minigame-toggle">
+        <label for="minigameToggle">🫧</label>
+        <input type="checkbox" id="minigameToggle" class="toggle-slider">
+    </div>
+    <audio id="backgroundMusic">
+        <source src="23rdbday.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="container">
+        <h1>Corinna sagt ich soll hier häbby börsday hinschreiben</h1>
+        <form id="form1" autocomplete="off">
+            <label for="input1">Wort 1:</label>
+            <input type="text" id="input1" name="input1" placeholder="Wort 1" autocomplete="off" required>
+            <button type="submit">Check</button>
+        </form>
+        <div class="result" id="result1"></div>
+        <form id="form2" autocomplete="off">
+            <label for="input2">Wort 2:</label>
+            <input type="text" id="input2" name="input2" placeholder="Wort 2" autocomplete="off" required>
+            <button type="submit">Check</button>
+        </form>
+        <div class="result" id="result2"></div>
+        <form id="form3" autocomplete="off">
+            <label for="input3">Wort 3:</label>
+            <input type="text" id="input3" name="input3" placeholder="Wort 3" autocomplete="off" required>
+            <button type="submit">Check</button>
+        </form>
+        <div class="result" id="result3"></div>
+        <button id="checkAllBtn" style="margin-top:2em; font-size:1em;">Check All</button>
+        <div class="result" id="resultAll"></div>
+    </div>
+    
+    <!-- Stats Box -->
+    <div class="stats-container" id="statsContainer" style="display: none;">
+        <h2>Ergebnis</h2>
+        <div class="stats-content">
+            <div class="result-status" id="resultStatus"></div>
+            <div class="stats-grid">
+                <div class="stat-item" id="errorStat">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Fehler</span>
+                </div>
+                <div class="stat-item" id="poppedStat" style="display: none;">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Bubbles geplatzt</span>
+                </div>
+                <div class="stat-item" id="missedStat" style="display: none;">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Bubbles verpasst</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
